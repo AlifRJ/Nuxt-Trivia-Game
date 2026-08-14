@@ -1,12 +1,10 @@
 <script setup>
-import { ref } from "vue";
-
 const categories = ref([
-  { id: "science", icon: "🔬", title: "Science", active: false },
-  { id: "history", icon: "🏛️", title: "History", active: false },
-  { id: "geography", icon: "🌍", title: "Geography", active: false },
-  { id: "mythology", icon: "🦄", title: "Mythology", active: false },
-  { id: "sports", icon: "⚽", title: "Sports", active: false },
+  { id: 17, icon: "🔬", title: "Science", active: false },
+  { id: 23, icon: "🏛️", title: "History", active: false },
+  { id: 22, icon: "🌍", title: "Geography", active: false },
+  { id: 20, icon: "🦄", title: "Mythology", active: false },
+  { id: 21, icon: "⚽", title: "Sports", active: false },
 ]);
 
 const difficulties = ref([
@@ -17,6 +15,13 @@ const difficulties = ref([
 
 const category = ref(null);
 const difficulty = ref("");
+const amount = 10;
+
+const gameSetup = useState("gameSetup");
+const startGame = (quizData) => {
+  gameSetup.value = quizData;
+  navigateTo(`/gameplay/game`);
+};
 
 const toggleCategory = (categoryId) => {
   category.value = category.value !== categoryId ? categoryId : null;
@@ -68,12 +73,12 @@ const toggleDifficulty = (difficultyType) => {
       <!-- Start -->
       <!-- Adjusted condition to require both, or update text if only category is needed -->
       <div v-if="category !== null && difficulty !== ''">
-        <NuxtLink
-          :to="`/gameplay/game?category=${category}&difficulty=${difficulty}`"
-          class="inline-block text-center w-full py-4 rounded-2xl text-lg font-bold transition-all duration-200 bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99]"
+        <button
+          @click="startGame({ category: category, difficulty: difficulty, amount: amount, categoryName: categoryName })"
+          class="w-full py-4 rounded-2xl text-lg font-bold transition-all duration-200 bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99]"
         >
           Start Game →
-        </NuxtLink>
+        </button>
       </div>
       <div v-else>
         <button class="w-full py-4 rounded-2xl text-lg font-bold transition-all duration-200 bg-gray-100 text-gray-400 cursor-not-allowed" disabled>Select a Category & Difficulty</button>

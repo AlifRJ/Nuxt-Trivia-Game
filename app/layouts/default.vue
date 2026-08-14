@@ -5,8 +5,6 @@
         <span class="text-white text-lg">❓</span>
       </div>
       <span class="text-xl font-bold text-gray-900"> Trivio </span>
-      <NuxtLink to="/">Home</NuxtLink>
-      <NuxtLink to="/about">About</NuxtLink>
     </div>
   </header>
   <slot></slot>
