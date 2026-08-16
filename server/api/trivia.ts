@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
 
   const session = await useSession(event, {
-    password: "a_very_long_and_secret_password_32_chars_min!",
+    password: process.env.NUXT_SESSION_PASSWORD,
   });
 
   let opentdbToken = session.data.opentdbToken;
