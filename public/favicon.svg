@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Gradien Background dari Hijau Mint ke Biru Cerah -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3CDA9B" />
+      <stop offset="100%" stop-color="#00A2E8" />
+    </linearGradient>
+
+    <!-- Gradien Tanda Tanya dari Pink ke Merah Cerah -->
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF537A" />
+      <stop offset="100%" stop-color="#FF1F4B" />
+    </linearGradient>
+
+    <!-- Efek Bayangan Lembut untuk Tanda Tanya -->
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.18" />
+    </filter>
+  </defs>
+
+  <!-- Latar Belakang Kotak Sudut Tumpul (Rounded Rectangle) -->
+  <rect x="0" y="0" width="512" height="512" rx="140" ry="140" fill="url(#bgGradient)" />
+
+  <!-- Ikon Tanda Tanya -->
+  <g filter="url(#dropShadow)">
+    <path d="M256 112 c-48.6 0-88 38.2-88 85.3 0 13.3 10.7 24 24 24 s24-10.7 24-24 c0-20.6 17.9-37.3 40-37.3 22.1 0 40 16.7 40 37.3 0 16.6-10.9 29.8-26.6 34.6 -24.4 7.5-37.4 28.5-37.4 53.6 v18.5 c0 13.3 10.7 24 24 24 s24-10.7 24-24 v-10.2 c25.4-8.7 48-31 48-68.8 C344 150.2 304.6 112 256 112 z" fill="url(#iconGradient)" />
+    <!-- Titik Bawah Tanda Tanya -->
+    <circle cx="256" cy="384" r="26" fill="url(#iconGradient)" />
+  </g>
+</svg>
