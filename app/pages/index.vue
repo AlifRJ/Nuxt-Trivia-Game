@@ -1,4 +1,26 @@
 <script setup>
+useSeoMeta({
+  title: "Trivio - Test Your Knowledge Across Categories",
+  description: "Test your brain with Trivio! Choose from science, history, geography, and sports trivia.",
+
+  // Open Graph (Facebook, LinkedIn, Discord)
+  ogTitle: "Trivio - Ready to Test Your Knowledge?",
+  ogDescription: "Pick a category, answer tough questions, Jump into science, history, and sports quizzes!",
+  // ogImage: "https://yourdomain.com/images/trivio-og-cover.png",
+  // ogImageUrl: "https://yourdomain.com/images/trivio-og-cover.png",
+  ogType: "website",
+  ogSiteName: "Trivio",
+
+  // Twitter / X
+  twitterCard: "summary_large_image",
+  twitterTitle: "Trivio - Pick a Quiz & Start Playing",
+  twitterDescription: "Test your knowledge across history, science, sports and more on Trivio!",
+  // twitterImage: "https://yourdomain.com/images/trivio-og-cover.png",
+
+  // Search Engine Directives
+  robots: "index, follow",
+});
+
 const categories = ref([
   { id: 17, icon: "🔬", title: "Science", active: false },
   { id: 23, icon: "🏛️", title: "History", active: false },

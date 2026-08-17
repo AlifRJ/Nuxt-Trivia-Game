@@ -3,6 +3,10 @@ definePageMeta({
   layout: "game",
 });
 
+useHead({
+  title: () => "Result",
+});
+
 const gameOverSetup = useState("gameOverSetup");
 
 // Guard: Redirect to home if game state doesn't exist
@@ -42,7 +46,6 @@ const total = computed(() => {
 // Calculate grade based on accuracy percentage
 const gameOverMessage = computed(() => {
   const accuracy = total.value.accuracy;
-  console.log(accuracy);
 
   if (accuracy >= 90) {
     return grades[0];

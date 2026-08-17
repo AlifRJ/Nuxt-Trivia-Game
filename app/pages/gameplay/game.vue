@@ -1,5 +1,7 @@
 <script setup>
-import { useShuffleQuestion } from "~/composables/useTrivia";
+useHead({
+  title: "Game",
+});
 
 definePageMeta({
   layout: "game",
