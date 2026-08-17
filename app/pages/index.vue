@@ -64,7 +64,7 @@ const toggleDifficulty = (diff) => {
       <!-- Adjusted condition to require both, or update text if only category is needed -->
       <div v-if="category !== null && difficulty !== ''">
         <button
-          @click="startGame({ category: category, difficulty: difficulty, amount: amount, categoryName: categoryName })"
+          @click="startGame({ category: category, difficulty: difficulty, amount: amount })"
           class="w-full py-4 rounded-2xl text-lg font-bold transition-all duration-200 bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99]"
         >
           Start Game →

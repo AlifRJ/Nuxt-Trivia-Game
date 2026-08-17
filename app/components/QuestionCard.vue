@@ -4,8 +4,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  pending: Boolean,
-  error: String,
   questionsLength: Number,
   questionIndex: Number,
   answersHistory: {

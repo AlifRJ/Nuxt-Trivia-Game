@@ -18,6 +18,7 @@ const isGameFinished = ref(false);
 
 // Track the result of each question (e.g., [true, false, true])
 const answersHistory = ref([]);
+const points = ref([]);
 
 const questions = ref([]);
 
@@ -49,6 +50,7 @@ const currentQuestion = computed(() => questions.value[currentQuestionIndex.valu
 const handleNextQuestion = (eventData) => {
   // Record true/false for this question
   answersHistory.value.push(eventData.isCorrect);
+  if (eventData.isCorrect) points.value.push(gameSetup.value?.difficulty.points);
 
   if (currentQuestionIndex.value < questions.value.length - 1) {
     currentQuestionIndex.value++;
@@ -56,6 +58,19 @@ const handleNextQuestion = (eventData) => {
     isGameFinished.value = true;
   }
 };
+
+const gameOverSetup = useState("gameOverSetup");
+
+// Game Finnish
+watch(
+  () => isGameFinished.value,
+  (value) => {
+    if (value === true) {
+      gameOverSetup.value = { answersHistory: answersHistory, points: points, category: gameSetup.value?.category.title, difficulty: gameSetup.value?.difficulty.type };
+      navigateTo(`/gameplay/results`);
+    }
+  },
+);
 </script>
 
 <template>
@@ -75,11 +90,11 @@ const handleNextQuestion = (eventData) => {
       <div v-else-if="pending">Loading your quiz...</div>
       <div v-else-if="error">Failed to load questions.</div>
 
-      <div v-else-if="isGameFinished" class="text-center py-10">
+      <!-- <div v-else-if="isGameFinished" class="text-center py-10">
         <h2 class="text-2xl font-bold mb-2">Quiz Completed!</h2>
         <p class="text-gray-600 mb-6">You scored {{ answersHistory.filter(Boolean).length }} / {{ questions.length }}</p>
         <NuxtLink to="/" class="px-5 py-2.5 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 transition"> Play Again </NuxtLink>
-      </div>
+      </div> -->
 
       <QuestionCard
         v-else-if="currentQuestion"
