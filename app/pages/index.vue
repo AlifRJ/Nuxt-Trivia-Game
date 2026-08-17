@@ -14,7 +14,7 @@ const difficulties = ref([
 ]);
 
 const category = ref(null);
-const difficulty = ref("");
+const difficulty = ref(null);
 const amount = 10;
 
 const gameSetup = useState("gameSetup");
@@ -23,22 +23,12 @@ const startGame = (quizData) => {
   navigateTo(`/gameplay/game`);
 };
 
-const toggleCategory = (categoryId) => {
-  category.value = category.value !== categoryId ? categoryId : null;
-
-  // Update active state for each category
-  categories.value.forEach((cat) => {
-    cat.active = cat.id === category.value;
-  });
+const toggleCategory = (cat) => {
+  category.value = cat;
 };
 
-const toggleDifficulty = (difficultyType) => {
-  difficulty.value = difficulty.value !== difficultyType ? difficultyType : "";
-
-  // Update active state for each difficulty
-  difficulties.value.forEach((diff) => {
-    diff.active = diff.type === difficulty.value;
-  });
+const toggleDifficulty = (diff) => {
+  difficulty.value = diff;
 };
 </script>
 
@@ -58,7 +48,7 @@ const toggleDifficulty = (difficultyType) => {
       <section class="mb-8">
         <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Category</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <CategoryButton v-for="cat in categories" :key="cat.id" @click="toggleCategory(cat.id)" :data="cat" :isActive="cat.active" />
+          <CategoryButton v-for="cat in categories" :key="cat.id" @click="toggleCategory(cat)" :data="cat" :isActive="category?.id === cat.id" />
         </div>
       </section>
 
@@ -66,7 +56,7 @@ const toggleDifficulty = (difficultyType) => {
       <section class="mb-10">
         <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Difficulty</h2>
         <div class="flex gap-3">
-          <DifficultyButton v-for="diff in difficulties" :key="diff.type" @click="toggleDifficulty(diff.type)" :data="diff" :isActive="diff.active" />
+          <DifficultyButton v-for="diff in difficulties" :key="diff.type" @click="toggleDifficulty(diff)" :data="diff" :isActive="difficulty?.type === diff.type" />
         </div>
       </section>
 
