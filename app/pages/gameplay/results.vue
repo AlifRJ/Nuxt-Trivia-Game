@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-  layout: "game",
+  layout: "default",
 });
 
 useHead({

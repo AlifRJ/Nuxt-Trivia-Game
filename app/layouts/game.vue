@@ -1,3 +1,8 @@
+<script setup>
+const props = defineProps({
+  score: Array,
+});
+</script>
 <template>
   <header class="border-b border-gray-100 px-6 py-3">
     <div class="max-w-2xl mx-auto flex items-center justify-between">
@@ -8,7 +13,7 @@
         <span class="font-bold text-gray-900 text-sm">Category</span>
       </div>
       <div class="flex items-center gap-4">
-        <!-- <ScoreBadge score="{score}" /> -->
+        <Score :score="score" />
         <!-- <TimerRing timeLeft="{timeLeft}" total="{cfg.time}" /> -->
       </div>
     </div>
