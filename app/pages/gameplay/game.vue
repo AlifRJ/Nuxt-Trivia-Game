@@ -22,6 +22,7 @@ const questions = ref([]);
 
 definePageMeta({
   layout: false,
+  middleware: "game-route",
 });
 
 // Display current question options
