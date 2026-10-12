@@ -16,4 +16,8 @@ export default defineNuxtConfig({
       ],
     },
   },
+  routeRules: {
+    "/login": { redirect: { to: "/auth/login", statusCode: 301 } },
+    "/register": { redirect: { to: "/auth/register", statusCode: 301 } },
+  },
 });
