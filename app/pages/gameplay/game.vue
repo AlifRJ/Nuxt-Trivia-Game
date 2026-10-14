@@ -64,14 +64,42 @@ const handleNextQuestion = (eventData) => {
 
 const gameOverSetup = useState("gameOverSetup");
 
+// get user session
+const { loggedIn } = useUserSession();
+
 // Game Finnish
 watch(
   () => isGameFinished.value,
-  (value) => {
-    if (value === true) {
-      gameOverSetup.value = { answersHistory: answersHistory, points: points, category: gameSetup.value?.category.title, difficulty: gameSetup.value?.difficulty.type };
-      navigateTo(`/gameplay/results`);
+  async (finished) => {
+    if (!finished) return;
+
+    const totalScore = (points.value || []).reduce((acc, curr) => acc + curr, 0);
+
+    gameOverSetup.value = {
+      answersHistory: [...answersHistory.value],
+      points: [...points.value],
+      category: gameSetup.value?.category.title,
+      difficulty: gameSetup.value?.difficulty.type,
+    };
+
+    if (loggedIn.value) {
+      try {
+        await $fetch("/api/score", {
+          method: "POST",
+          body: {
+            score: totalScore,
+            category: gameSetup.value?.category?.title,
+            difficulty: gameSetup.value?.difficulty?.type,
+          },
+        });
+      } catch (err) {
+        console.error("Failed to save score:", err);
+      }
+    } else {
+      console.warn("Guest user: Score not submitted.");
     }
+
+    await navigateTo("/gameplay/results", { replace: true });
   },
 );
 </script>

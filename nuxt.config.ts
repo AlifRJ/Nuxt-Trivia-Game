@@ -9,7 +9,10 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    apiBaseUrl: "",
+    apiBaseUrl: process.env.NUXT_API_BASE_URL || "http://localhost:8080",
+    public: {
+      apiBaseUrl: process.env.NUXT_API_BASE_URL || "http://localhost:8080",
+    },
   },
   app: {
     head: {
