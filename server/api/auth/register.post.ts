@@ -10,9 +10,10 @@ const registerSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, (data) => registerSchema.parse(data));
+  const config = useRuntimeConfig(event);
 
   try {
-    const data = await $fetch<{ message: string }>("http://localhost:8080/v1/register", {
+    const data = await $fetch<{ message: string }>(`${config.apiBaseUrl}/v1/register`, {
       method: "POST",
       body,
     });

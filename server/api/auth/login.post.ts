@@ -18,9 +18,10 @@ interface LoginResponse {
 
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, (data) => loginSchema.parse(data));
+  const config = useRuntimeConfig(event);
 
   try {
-    const data = await $fetch<LoginResponse>("http://localhost:8080/v1/login", {
+    const data = await $fetch<LoginResponse>(`${config.apiBaseUrl}/v1/login`, {
       method: "POST",
       body,
     });
