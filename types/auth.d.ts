@@ -1,4 +1,4 @@
-// auth.d.ts
+// types/auth.d.ts
 declare module "#auth-utils" {
   interface User {
     id: string | number;
@@ -9,6 +9,12 @@ declare module "#auth-utils" {
 
   interface SecureSessionData {
     accessToken: string;
+  }
+
+  interface UserSession {
+    user?: User;
+    secure?: SecureSessionData;
+    loggedInAt?: Date;
   }
 }
 

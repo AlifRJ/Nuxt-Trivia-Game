@@ -17,19 +17,18 @@ const handleLogout = async () => {
   isLoggingOut.value = true;
 
   try {
-    // 1. Call Nitro API to invalidate token/session on backend & clear encrypted cookie
+    // Call Nitro API to invalidate token/session on backend & clear encrypted cookie
     await $fetch("/api/auth/logout", {
       method: "POST",
     });
   } catch (err) {
     console.error("Logout request failed, clearing local session anyway:", err);
   } finally {
-    // 2. Clear client-side session state
+    // Clear client-side session state
     await clear();
     isLoggingOut.value = false;
 
-    // 3. Redirect to login page
-    await navigateTo("/");
+    await navigateTo("/", { replace: true });
   }
 };
 </script>

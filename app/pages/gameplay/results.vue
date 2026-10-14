@@ -83,7 +83,7 @@ const playAgain = () => {
 
         <!-- Score card -->
         <div class="bg-gradient-to-br from-emerald-50 to-sky-50 border border-emerald-100 rounded-3xl p-8 mb-6">
-          <div class="grid grid-cols-4 gap-4 text-center">
+          <div class="grid grid-cols-3 gap-4 text-center">
             <div>
               <div class="text-4xl font-extrabold text-gray-900 mb-1">{{ total.finalScore }}</div>
               <div class="text-xs text-gray-500 font-medium uppercase tracking-wide">Score</div>
@@ -98,11 +98,6 @@ const playAgain = () => {
               <div class="text-4xl font-extrabold text-sky-600 mb-1">{{ total.wrongAnswer }}</div>
               <div class="text-xs text-gray-500 font-medium uppercase tracking-wide">Wrong</div>
               <div class="text-xs text-gray-400">{{ 100 - total.accuracy }}% missed</div>
-            </div>
-            <div>
-              <div className="text-3xl font-extrabold text-violet-600 mb-1">#1</div>
-              <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Rank</div>
-              <div className="text-xs text-gray-400">overall</div>
             </div>
           </div>
 

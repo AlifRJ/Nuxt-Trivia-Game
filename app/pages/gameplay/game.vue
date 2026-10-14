@@ -8,6 +8,8 @@ if (!gameSetup.value) {
   navigateTo("/");
 }
 
+const { $api } = useNuxtApp();
+
 // Get Trivia Data
 const { data: questionBank, pending, error } = await useGetQuestions(gameSetup.value?.amount, gameSetup.value?.category.id, gameSetup.value?.difficulty.type);
 
@@ -84,7 +86,7 @@ watch(
 
     if (loggedIn.value) {
       try {
-        await $fetch("/api/score", {
+        await $api("/api/score", {
           method: "POST",
           body: {
             score: totalScore,
