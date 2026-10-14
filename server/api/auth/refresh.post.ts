@@ -4,11 +4,15 @@ export default defineEventHandler(async (event) => {
   const reqHeaders = getRequestHeaders(event);
   const clientIp = getRequestIP(event, { xForwardedFor: true }) || "";
 
+  const cookies = parseCookies(event);
+  const refreshToken = cookies.refresh_token;
+
   try {
     // Call backend refresh endpoint
     const response = await $fetch.raw<{ access_token: string }>(`${config.apiBaseUrl}/v1/refresh`, {
       method: "POST",
       headers: {
+        Authorization: refreshToken ? `Bearer ${refreshToken}` : "",
         cookie: reqHeaders.cookie || "",
         "x-forwarded-for": clientIp,
         "user-agent": reqHeaders["user-agent"] || "",

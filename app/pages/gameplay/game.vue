@@ -94,8 +94,9 @@ watch(
             difficulty: gameSetup.value?.difficulty?.type,
           },
         });
+        console.log("Score saved successfully!", data);
       } catch (err) {
-        console.error("Failed to save score:", err);
+        console.error("Failed to save score after token refresh:", err);
       }
     } else {
       console.warn("Guest user: Score not submitted.");

@@ -47,7 +47,7 @@ const handleLogout = async () => {
       <!-- Navigation & Auth state -->
       <div class="flex items-center gap-3">
         <!-- Leaderboard Link -->
-        <NuxtLink to="/score-board" class="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg transition-all text-gray-500 hover:text-gray-800 hover:bg-gray-100" exact-active-class="!bg-sky-100 !text-sky-700">
+        <NuxtLink to="/leaderboard" class="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg transition-all text-gray-500 hover:text-gray-800 hover:bg-gray-100" exact-active-class="!bg-sky-100 !text-sky-700">
           <svg viewBox="0 0 16 16" fill="none" class="w-4 h-4">
             <rect x="1" y="8" width="3" height="7" rx="1" fill="currentColor" opacity=".5" />
             <rect x="6" y="4" width="3" height="11" rx="1" fill="currentColor" opacity=".75" />

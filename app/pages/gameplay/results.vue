@@ -133,7 +133,7 @@ const playAgain = () => {
         <div class="flex gap-3">
           <button @click="playAgain" class="flex-1 py-4 rounded-2xl text-base font-bold border-2 border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200">Play Again ↺</button>
           <button
-            @click="navigateTo('/score-board')"
+            @click="navigateTo('/leaderboard')"
             class="flex-1 py-4 rounded-2xl text-base font-bold bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
           >
             View Leaderboard →
