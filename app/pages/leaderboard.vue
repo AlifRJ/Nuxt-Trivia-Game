@@ -8,13 +8,13 @@ const { loggedIn, user } = useUserSession();
 // Category options (Default: All Categories)
 const categories = [
   { label: "All Categories", value: "global" },
-  { label: "General Knowledge", value: "General Knowledge" },
-  { label: "Video Games", value: "Video Games" },
-  { label: "Science", value: "Science" },
-  { label: "History", value: "History" },
-  { label: "Geography", value: "Geography" },
-  { label: "Mythology", value: "Mythology" },
-  { label: "Sports", value: "Sports" },
+  { label: "General Knowledge", value: "general knowledge" },
+  { label: "Video Games", value: "video games" },
+  { label: "Science", value: "science" },
+  { label: "History", value: "history" },
+  { label: "Geography", value: "geography" },
+  { label: "Mythology", value: "mythology" },
+  { label: "Sports", value: "sports" },
 ];
 
 // Default to "global" on page load
@@ -112,7 +112,7 @@ const getRankBadge = (index) => {
                 <span v-if="user && (item.userId === user.id || item.userID === user.id || item.username === user.username)" class="text-xs bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded-full font-semibold"> You </span>
               </div>
               <div class="text-xs text-gray-400 flex gap-2 mt-0.5 capitalize">
-                <span>{{ item.category || (selectedCategory === "all" ? "General" : selectedCategory) }}</span>
+                <span>{{ item.category || (selectedCategory === "global" ? "General" : selectedCategory) }}</span>
                 <template v-if="item.difficulty">
                   <span>·</span>
                   <span class="font-medium text-emerald-500">{{ item.difficulty }}</span>
