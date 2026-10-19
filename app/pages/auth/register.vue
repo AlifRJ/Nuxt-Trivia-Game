@@ -17,6 +17,8 @@ const generalError = ref("");
 // Simple email regex for client-side check
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const registrationState = useState("registration_status", () => null);
+
 const submitForm = async () => {
   // Reset error
   errors.name = "";
@@ -62,10 +64,19 @@ const submitForm = async () => {
   try {
     const response = await $fetch("/api/auth/register", {
       method: "POST",
-      body: formData,
+      body: {
+        name: formData.name.trim(),
+        username: formData.username.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+      },
     });
 
     if (response.success) {
+      registrationState.value = {
+        success: true,
+        message: "Registration success! Please login with your created account.",
+      };
       await navigateTo("/auth/login", { replace: true });
     }
   } catch (err) {

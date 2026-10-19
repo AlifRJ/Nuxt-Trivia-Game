@@ -77,6 +77,16 @@ watch(
     if (newValue) errors.password = "";
   },
 );
+
+const registrationState = useState("registration_status", () => null);
+const alertData = ref(null);
+onMounted(() => {
+  if (registrationState.value?.success) {
+    alertData.value = registrationState.value.message;
+
+    registrationState.value = null;
+  }
+});
 </script>
 <template>
   <div class="min-h-screen bg-white flex flex-col">
@@ -96,6 +106,42 @@ watch(
           <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Welcome to Trivio</h1>
           <p class="text-gray-500 text-sm">Enter your username/email and password to start playing and track your scores.</p>
         </div>
+
+        <!-- Alert Box Banner -->
+        <Transition
+          enter-active-class="transition duration-300 ease-out"
+          enter-from-class="transform -translate-y-2 opacity-0"
+          enter-to-class="transform translate-y-0 opacity-100"
+          leave-active-class="transition duration-150 ease-in"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+        >
+          <div v-if="alertData" class="mb-4 flex items-start p-4 text-emerald-800 rounded-xl bg-emerald-50 border border-emerald-200 shadow-sm" role="alert">
+            <!-- Icon Success -->
+            <svg class="flex-shrink-0 inline w-5 h-5 me-3 mt-0.5 text-emerald-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+            </svg>
+
+            <!-- Content Message -->
+            <div class="flex-1 text-sm font-medium">
+              <span class="font-semibold block mb-0.5">Register Success</span>
+              {{ alertData }}
+            </div>
+
+            <!-- Close Button -->
+            <button
+              type="button"
+              @click="alertData = null"
+              class="ms-auto -mx-1.5 -my-1.5 bg-emerald-50 text-emerald-500 rounded-lg focus:ring-2 focus:ring-emerald-400 p-1.5 hover:bg-emerald-100 inline-flex items-center justify-center h-8 w-8"
+              aria-label="Close"
+            >
+              <span class="sr-only">Close</span>
+              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+              </svg>
+            </button>
+          </div>
+        </Transition>
 
         <!-- Server Error Alert -->
         <div v-if="generalError" class="mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm font-medium">

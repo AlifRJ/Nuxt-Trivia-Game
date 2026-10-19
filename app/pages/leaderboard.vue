@@ -20,11 +20,44 @@ const categories = [
 // Default to "global" on page load
 const selectedCategory = ref("global");
 
-// Fetch from Nuxt Proxy (re-fetches automatically when selectedCategory changes)
-const { data: response, pending, error } = await useFetch(() => `/api/leaderboard/${selectedCategory.value}`, { watch: [selectedCategory] });
+const {
+  data: response,
+  pending,
+  error,
+} = await useFetch(() => `/api/leaderboard/${selectedCategory.value}`, {
+  // watch: [selectedCategory],
+  // Unique cache key per category allows switching back with 0 network calls
+  key: `leaderboard-${selectedCategory.value}`,
+
+  // Instant local lookup from Nuxt payload cache
+  getCachedData(key) {
+    const nuxtApp = useNuxtApp();
+    return nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+  },
+
+  // Deduplicate inflight requests during rapid tab clicks
+  dedupe: "defer",
+
+  lazy: true,
+});
 
 // Extract raw array from server response
 const scores = computed(() => response.value?.message || []);
+
+// Optional: Background prefetch remaining categories after component mounts
+onMounted(() => {
+  categories.forEach((cat) => {
+    if (cat.value !== selectedCategory.value) {
+      $fetch(`/api/leaderboard/${encodeURIComponent(cat.value)}`, {
+        key: `leaderboard-${cat.value}`,
+      })
+        .then((data) => {
+          nuxtApp.payload.data[`leaderboard-${cat.value}`] = data;
+        })
+        .catch(() => {});
+    }
+  });
+});
 
 const getRankBadge = (index) => {
   if (index === 0) return "🥇";
