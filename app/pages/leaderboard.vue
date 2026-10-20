@@ -4,8 +4,10 @@ useHead({
 });
 
 const { loggedIn, user } = useUserSession();
+const nuxtApp = useNuxtApp();
+const route = useRoute(); // Deklarasikan di top-level agar aman di SSR & Client
 
-// Category options (Default: All Categories)
+// Options Kategori
 const categories = [
   { label: "All Categories", value: "global" },
   { label: "General Knowledge", value: "general knowledge" },
@@ -17,46 +19,66 @@ const categories = [
   { label: "Sports", value: "sports" },
 ];
 
-// Default to "global" on page load
 const selectedCategory = ref("global");
+
+// Computed cache key agar ter-evaluasi dengan benar secara reaktif
+const cacheKey = computed(() => `leaderboard-${selectedCategory.value}`);
 
 const {
   data: response,
   pending,
   error,
-} = await useFetch(() => `/api/leaderboard/${selectedCategory.value}`, {
-  // watch: [selectedCategory],
-  // Unique cache key per category allows switching back with 0 network calls
-  key: `leaderboard-${selectedCategory.value}`,
+} = await useFetch(() => `/api/leaderboard/${encodeURIComponent(selectedCategory.value)}`, {
+  key: cacheKey,
 
-  // Instant local lookup from Nuxt payload cache
-  getCachedData(key) {
-    const nuxtApp = useNuxtApp();
-    return nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+  // Mengambil dari payload cache kecuali ada flag ?refresh=true
+  getCachedData(key, nuxtAppInstance) {
+    if (route.query.refresh === "true") {
+      return undefined; // Memicu fetch ulang
+    }
+
+    return nuxtAppInstance.payload.data[key] || nuxtAppInstance.static.data[key];
   },
 
-  // Deduplicate inflight requests during rapid tab clicks
   dedupe: "defer",
-
   lazy: true,
 });
 
-// Extract raw array from server response
+// Extract array dari response
 const scores = computed(() => response.value?.message || []);
 
-// Optional: Background prefetch remaining categories after component mounts
+// Cleanup query URL & Background prefetch
 onMounted(() => {
-  categories.forEach((cat) => {
-    if (cat.value !== selectedCategory.value) {
-      $fetch(`/api/leaderboard/${encodeURIComponent(cat.value)}`, {
-        key: `leaderboard-${cat.value}`,
-      })
-        .then((data) => {
-          nuxtApp.payload.data[`leaderboard-${cat.value}`] = data;
-        })
-        .catch(() => {});
-    }
-  });
+  // clear query ?refresh=true without page refresh
+  if (route.query.refresh) {
+    const query = { ...route.query };
+    delete query.refresh;
+    navigateTo({ path: route.path, query }, { replace: true });
+  }
+
+  // Prefetch other categories
+  const prefetchCategories = () => {
+    categories.forEach((cat) => {
+      if (cat.value !== selectedCategory.value) {
+        const key = `leaderboard-${cat.value}`;
+
+        // Fetch only if no data in cache
+        if (!nuxtApp.payload.data[key]) {
+          $fetch(`/api/leaderboard/${encodeURIComponent(cat.value)}`)
+            .then((data) => {
+              nuxtApp.payload.data[key] = data;
+            })
+            .catch(() => {});
+        }
+      }
+    });
+  };
+
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(prefetchCategories);
+  } else {
+    setTimeout(prefetchCategories, 1000);
+  }
 });
 
 const getRankBadge = (index) => {

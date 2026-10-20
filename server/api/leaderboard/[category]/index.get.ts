@@ -1,12 +1,13 @@
 // server/api/leaderboard/[category]/index.get.ts
 export default defineEventHandler(async (event) => {
   // Mengambil satu per satu parameter
-  const category = getRouterParam(event, "category");
+  const rawCategory = getRouterParam(event, "category") || "global";
+  const category = decodeURIComponent(rawCategory);
 
   const config = useRuntimeConfig(event);
 
   try {
-    const scores = await $fetch<any[]>(`${config.apiBaseUrl}/v1/leaderboards/${category}`, {
+    const scores = await $fetch<any[]>(`${config.apiBaseUrl}/v1/leaderboards/${encodeURIComponent(category)}`, {
       method: "GET",
     });
 

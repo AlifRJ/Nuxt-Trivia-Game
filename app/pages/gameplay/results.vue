@@ -10,9 +10,9 @@ useHead({
 const gameOverSetup = useState("gameOverSetup");
 
 // Guard: Redirect to home if game state doesn't exist
-onMounted(() => {
-  if (!gameOverSetup.value) {
-    navigateTo("/");
+watchEffect(() => {
+  if (process.client && !gameOverSetup.value) {
+    navigateTo("/", { replace: true });
   }
 });
 
@@ -31,8 +31,10 @@ const total = computed(() => {
   const questionsLength = history.length;
   const correctAnswer = history.reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
   const wrongAnswer = questionsLength - correctAnswer;
+
+  const basePointPerQuestion = points.length > 0 ? points[0] || 0 : 10;
   const finalScore = points.reduce((acc, curr) => acc + curr, 0);
-  const maxScore = (points[0] || 0) * questionsLength;
+  const maxScore = basePointPerQuestion * questionsLength;
   const accuracy = questionsLength > 0 ? Math.round((correctAnswer / questionsLength) * 100) : 0;
 
   return {
@@ -66,13 +68,13 @@ const playAgain = () => {
 </script>
 
 <template>
-  <div className="min-h-screen bg-white flex flex-col">
+  <div class="min-h-screen bg-white flex flex-col">
     <main class="flex-1 flex flex-col items-center px-6 py-10">
       <div v-if="gameOverSetup" class="w-full max-w-2xl">
         <!-- Result hero -->
         <div class="text-center mb-8">
           <div class="text-6xl mb-4">{{ gameOverMessage.emoji }}</div>
-          <h1 :class="`text-4xl font-extrabold mb-2 ${gameOverMessage.color}`">
+          <h1 :class="['text-4xl font-extrabold mb-2', gameOverMessage.color]">
             {{ gameOverMessage.label }}
           </h1>
           <p class="text-gray-500 text-sm">
@@ -133,7 +135,7 @@ const playAgain = () => {
         <div class="flex gap-3">
           <button @click="playAgain" class="flex-1 py-4 rounded-2xl text-base font-bold border-2 border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200">Play Again ↺</button>
           <button
-            @click="navigateTo('/leaderboard')"
+            @click="navigateTo({ path: '/leaderboard', query: { refresh: 'true' } })"
             class="flex-1 py-4 rounded-2xl text-base font-bold bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
           >
             View Leaderboard →
