@@ -3,6 +3,12 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss", "nuxt-auth-utils"],
+  runtimeConfig: {
+    apiBaseUrl: process.env.NUXT_API_BASE_URL || "http://localhost:8080",
+    public: {
+      apiBaseUrl: process.env.NUXT_API_BASE_URL || "http://localhost:8080",
+    },
+  },
   app: {
     head: {
       titleTemplate: "%s | Trivio",
@@ -15,5 +21,9 @@ export default defineNuxtConfig({
         { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       ],
     },
+  },
+  routeRules: {
+    "/login": { redirect: { to: "/auth/login", statusCode: 301 } },
+    "/register": { redirect: { to: "/auth/register", statusCode: 301 } },
   },
 });
