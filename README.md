@@ -17,15 +17,11 @@ Try Trivio: [nuxt-trivia-game.vercel.app](https://nuxt-trivia-game.vercel.app)
 
 | Quiz setup | Leaderboard |
 | --- | --- |
-| ![Trivio quiz setup screen](<img width="1462" height="768" alt="home" src="https://github.com/user-attachments/assets/c8399f7c-3a8a-47d5-af6f-f300d4fe8c14" />
-) | ![Trivio leaderboard screen](<img width="1459" height="768" alt="leaderboard" src="https://github.com/user-attachments/assets/4d35bb86-822c-4176-b86e-59a1066fe0ba" />
-) |
+| ![Trivio quiz setup screen](<img width="1462" height="768" alt="home" src="https://github.com/user-attachments/assets/c8399f7c-3a8a-47d5-af6f-f300d4fe8c14" />) | ![Trivio leaderboard screen](<img width="1459" height="768" alt="leaderboard" src="https://github.com/user-attachments/assets/4d35bb86-822c-4176-b86e-59a1066fe0ba" />) |
 
 | Gameplay | Results |
 | --- | --- |
-| ![Trivio gameplay screen](<img width="1454" height="768" alt="gameplay" src="https://github.com/user-attachments/assets/9c552c91-6e21-491e-b451-56672207bbb5" />
-) | ![Trivio quiz results screen](<img width="1459" height="768" alt="results" src="https://github.com/user-attachments/assets/e107747b-1e9c-4b7f-a4e9-a9455117e84b" />
-) |
+| ![Trivio gameplay screen](<img width="1454" height="768" alt="gameplay" src="https://github.com/user-attachments/assets/9c552c91-6e21-491e-b451-56672207bbb5" />) | ![Trivio quiz results screen](<img width="1459" height="768" alt="results" src="https://github.com/user-attachments/assets/e107747b-1e9c-4b7f-a4e9-a9455117e84b" />) |
 
 ## Backend
 
