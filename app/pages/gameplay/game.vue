@@ -95,7 +95,7 @@ watch(
           },
         });
       } catch (err) {
-        console.error("Failed to save score after token refresh:", err);
+        console.error("Failed to save score:", err);
       }
     } else {
       console.warn("Guest user: Score not submitted.");

@@ -8,8 +8,8 @@ useHead({
   title: "Register",
 });
 
-const formData = reactive({ name: "", username: "", email: "", password: "" });
-const errors = reactive({ name: "", username: "", email: "", password: "" });
+const formData = reactive({ name: "", username: "", email: "", password: "", confirmPassword: "" });
+const errors = reactive({ name: "", username: "", email: "", password: "", confirmPassword: "" });
 
 const isSubmitting = ref(false);
 const generalError = ref("");
@@ -25,6 +25,7 @@ const submitForm = async () => {
   errors.username = "";
   errors.email = "";
   errors.password = "";
+  errors.confirmPassword = "";
   generalError.value = "";
 
   let isValid = true;
@@ -51,8 +52,21 @@ const submitForm = async () => {
   }
 
   // Validate Password
+  const minLength = 8;
+
   if (!formData.password) {
     errors.password = "Password can not be empty";
+    isValid = false;
+  } else if (formData.password.length < minLength) {
+    errors.password = `Password must be at least ${minLength} characters long`;
+    isValid = false;
+  }
+
+  if (!formData.confirmPassword) {
+    errors.confirmPassword = "Please confirm your password";
+    isValid = false;
+  } else if (formData.password && formData.password !== formData.confirmPassword) {
+    errors.confirmPassword = "Passwords does not match";
     isValid = false;
   }
 
@@ -109,6 +123,12 @@ watch(
     if (newValue) errors.password = "";
   },
 );
+watch(
+  () => formData.confirmPassword,
+  (newValue) => {
+    if (newValue) errors.confirmPassword = "";
+  },
+);
 </script>
 <template>
   <div class="min-h-screen bg-white flex flex-col">
@@ -148,6 +168,10 @@ watch(
 
           <div>
             <AuthInput id="password" type="password" label="Password" placeholder="e.g. ********" v-model="formData.password" :required="true" :error="errors.password" />
+          </div>
+
+          <div>
+            <AuthInput id="confirmPassword" type="password" label="Confirm Password" placeholder="e.g. ********" v-model="formData.confirmPassword" :required="true" :error="errors.confirmPassword" />
           </div>
 
           <button
