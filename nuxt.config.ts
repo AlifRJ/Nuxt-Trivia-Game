@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "nuxt-auth-utils"],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-auth-utils", '@vercel/analytics'],
   runtimeConfig: {
     apiBaseUrl: process.env.NUXT_API_BASE_URL || "http://localhost:8080",
     public: {
