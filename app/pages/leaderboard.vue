@@ -4,12 +4,9 @@ useHead({
 });
 
 const { loggedIn, user } = useUserSession();
-const nuxtApp = useNuxtApp();
-const route = useRoute(); // Deklarasikan di top-level agar aman di SSR & Client
 
-// Options Kategori
 const categories = [
-  { label: "All Categories", value: "global" },
+  { label: "Global", value: "global" },
   { label: "General Knowledge", value: "general knowledge" },
   { label: "Video Games", value: "video games" },
   { label: "Science", value: "science" },
@@ -20,66 +17,56 @@ const categories = [
 ];
 
 const selectedCategory = ref("global");
-
-// Computed cache key agar ter-evaluasi dengan benar secara reaktif
 const cacheKey = computed(() => `leaderboard-${selectedCategory.value}`);
 
+// Reactive data fetch for currently active category
 const {
   data: response,
   pending,
   error,
-} = await useFetch(() => `/api/leaderboard/${encodeURIComponent(selectedCategory.value)}`, {
-  key: cacheKey,
+} = await useFetch(
+  () => `/api/leaderboard/${encodeURIComponent(selectedCategory.value)}`, 
+  {
+    key: cacheKey,
+    dedupe: "defer",
+    getCachedData(key, nuxtAppInstance) {
+      return nuxtAppInstance.payload.data[key] || nuxtAppInstance.static.data[key];
+    },
+  }
+);
 
-  // Mengambil dari payload cache kecuali ada flag ?refresh=true
-  getCachedData(key, nuxtAppInstance) {
-    if (route.query.refresh === "true") {
-      return undefined; // Memicu fetch ulang
-    }
-
-    return nuxtAppInstance.payload.data[key] || nuxtAppInstance.static.data[key];
-  },
-
-  dedupe: "defer",
-  lazy: true,
-});
-
-// Extract array dari response
 const scores = computed(() => response.value?.message || []);
 
-// Cleanup query URL & Background prefetch
-onMounted(() => {
-  // clear query ?refresh=true without page refresh
-  if (route.query.refresh) {
-    const query = { ...route.query };
-    delete query.refresh;
-    navigateTo({ path: route.path, query }, { replace: true });
-  }
+// Helper to prefetch un-cached categories in low-priority idle periods
+const prefetchCategories = () => {
+  categories.forEach((cat) => {
+    if (cat.value !== selectedCategory.value) {
+      const key = `leaderboard-${cat.value}`;
+      const { data: cachedData } = useNuxtData(key);
 
-  // Prefetch other categories
-  const prefetchCategories = () => {
-    categories.forEach((cat) => {
-      if (cat.value !== selectedCategory.value) {
-        const key = `leaderboard-${cat.value}`;
-
-        // Fetch only if no data in cache
-        if (!nuxtApp.payload.data[key]) {
-          $fetch(`/api/leaderboard/${encodeURIComponent(cat.value)}`)
-            .then((data) => {
-              nuxtApp.payload.data[key] = data;
-            })
-            .catch(() => {});
-        }
+      // Fetch only if key is not yet populated in the cache
+      if (!cachedData.value) {
+        $fetch(`/api/leaderboard/${encodeURIComponent(cat.value)}`, { key })
+          .then((data) => {
+            useNuxtData(key).data.value = data;
+          })
+          .catch(() => {});
       }
-    });
-  };
+    }
+  });
+};
 
-  if ("requestIdleCallback" in window) {
+const schedulePrefetch = () => {
+  if (typeof window !== "undefined" && "requestIdleCallback" in window) {
     requestIdleCallback(prefetchCategories);
   } else {
     setTimeout(prefetchCategories, 1000);
   }
-});
+};
+
+// Trigger prefetching on initial mount AND whenever category changes
+onMounted(schedulePrefetch);
+watch(selectedCategory, schedulePrefetch);
 
 const getRankBadge = (index) => {
   if (index === 0) return "🥇";
@@ -107,7 +94,7 @@ const getRankBadge = (index) => {
           <NuxtLink to="/login" class="flex-shrink-0 text-xs font-bold bg-emerald-600 text-white px-3 py-1.5 rounded-xl hover:bg-emerald-700 transition-colors"> Sign In </NuxtLink>
         </div>
 
-        <!-- Category Filters (Defaults to "All Categories") -->
+        <!-- Category Filters (Defaults to "Global") -->
         <div class="flex gap-2 overflow-x-auto pb-2 mb-6 no-scrollbar">
           <button
             v-for="cat in categories"
@@ -128,7 +115,7 @@ const getRankBadge = (index) => {
         <!-- Error State -->
         <div v-else-if="error" class="text-center py-20 text-red-500">
           <div class="text-5xl mb-4">⚠️</div>
-          <p class="text-sm font-medium">{{ error.statusMessage || "Failed to load leaderboard." }}</p>
+          <p class="text-sm font-medium">{{ error.statusText || "Failed to load leaderboard." }}</p>
         </div>
 
         <!-- Empty State -->
@@ -167,7 +154,7 @@ const getRankBadge = (index) => {
                 <span v-if="user && (item.userId === user.id || item.userID === user.id || item.username === user.username)" class="text-xs bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded-full font-semibold"> You </span>
               </div>
               <div class="text-xs text-gray-400 flex gap-2 mt-0.5 capitalize">
-                <span>{{ item.category || (selectedCategory === "global" ? "General" : selectedCategory) }}</span>
+                <span>{{ item.category || (selectedCategory) }} </span>
                 <template v-if="item.difficulty">
                   <span>·</span>
                   <span class="font-medium text-emerald-500">{{ item.difficulty }}</span>
